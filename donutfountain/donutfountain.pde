@@ -5,19 +5,22 @@ int donutDetail = 16;
 float phi = (sqrt(5)+1)/2 - 1; // golden ratio
 float ga = phi*2*PI;           // golden angle
 
-int nbrPoints = 24;
+int haloPoints = 18;
+int haloPeriod = 67;
+int haloTurns = 3;
 
-Donut[] carton = new Donut[nbrPoints];
+Donut[] carton = new Donut[haloPeriod];
+Donut mother;
 
 PShape donutChunk, glazeChunk;
 
 void setup() {
   size(600, 600, P3D); 
 
-  for (int i= 0; i < nbrPoints; i++) {
+  for (int i= 0; i < haloPeriod; i++) {
     carton[i] = new Donut();
   }
-
+  mother = new Donut();
 
   donutChunk = createShape();
   donutChunk.beginShape(QUAD_STRIP);
@@ -41,6 +44,10 @@ void setup() {
     glazeChunk.vertex((Rd-rd*cos(beta))*sin(alpha+TWO_PI/donutDetail), (Rd-rd*cos(beta))*cos(alpha+TWO_PI/donutDetail), rd*sin(beta)+1);
   }
   glazeChunk.endShape();
+  mother.flav = 2;
+  mother.isGlazed = true;
+  mother.glaze = 3;
+  mother.isSprink = true;
 }
 
 
@@ -48,93 +55,78 @@ void draw() {
   background(#FFBEEB);
   noStroke();
   fill(#573620);
-  camera(-950*sin(frameCount*PI/360), -950*cos(frameCount*PI/360), 0, 
-    0, 0, 00, 
+  camera(
+    // -400, 0, 200, 
+    -300*sin(frameCount*PI/360f), -300*cos(frameCount*PI/360f), 200, 
+    0, 0, -80, 
     0, 0, -1.0);
-  pushMatrix();
-  rotateX(PI/2);
-  pushMatrix();
-  rotateZ(frameCount*PI/360);
-  scale(1, 1, -1);
-  donutRing();
-  popMatrix();
 
   pushMatrix();
-  translate(0, 0, 190);
-  rotateY(PI/3);
-  translate(0, 0, 300);
-  rotateZ(frameCount*PI/360);
-  donutRing();
+  scale(3, 3, 3);
+  mother.render();
   popMatrix();
 
-  pushMatrix();
-  translate(0, 0, 190);
-  rotateY(-PI/3);
-  translate(0, 0, 300);
-  rotateZ(frameCount*PI/360);
-  donutRing();
-  popMatrix();
-  pushMatrix();
-  translate(00, 0, 400*sqrt(2));
-  rotateX(PI/2);
-  rotateZ(frameCount*PI/360);
-  donutRing();
-  popMatrix();
-  pushMatrix();
-  scale(1, 1, -1);
-  pushMatrix();
-  translate(0, 0, 190);
-  rotateY(PI/3);
-  translate(0, 0, 300);
-  rotateZ(frameCount*PI/360);
-  donutRing();
-  popMatrix();
-
-  pushMatrix();
-  translate(0, 0, 190);
-  rotateY(-PI/3);
-  translate(0, 0, 300);
-  rotateZ(frameCount*PI/360);
-  donutRing();
-  popMatrix();
-  pushMatrix();
-  translate(00, 0, 400*sqrt(2));
-  rotateX(PI/2);
-  rotateZ(frameCount*PI/360);
-  donutRing();
-  popMatrix();
-  popMatrix();
-
-  pushMatrix();
-  translate(400, 0, 0);
-  rotateX(PI/2);
-  rotateZ(frameCount*PI/360);
-  donutRing();
-  popMatrix();
-
-  pushMatrix();
-  translate(-400, 0, 0);
-  rotateX(PI/2);
-  rotateZ(frameCount*PI/360);
-  donutRing();
-  popMatrix();
-  popMatrix();
-  println(frameRate + " : " + frameCount);
-
-  saveFrame("render/####_donuts.tif");
-  if (frameCount > 720) noLoop();
-}
-
-void donutRing() {
-  for (int i = 0; i < carton.length; i++) {
-    pushMatrix();
-    rotateZ(i*PI/(carton.length/2));
-    translate(250, 0, 0);
-    rotateY((i%2)*PI/2);
-    rotateZ(frameCount*PI/180f);
-    carton[i].render();
-    popMatrix();
+  for (int i = 0; i < haloTurns; i++) {
+    for (int j = 0; j < haloPoints; j++) {
+      pushMatrix();
+      rotateZ(i*TWO_PI/haloTurns + j*TWO_PI/haloPoints/haloTurns);
+      translate(Rd *3, 0, 0);
+      rotateY(j*TWO_PI/haloPoints+frameCount*PI/60f);
+      translate(Rd*1.6, 0, 0);
+      rotateY((frameCount+j)*PI/15f);
+      scale(0.25, 0.25, - 0.25);
+      carton[(i*haloPoints+j)%haloPeriod].render();
+      popMatrix();
+    }
   }
+
+
+  for (int i = 0; i < haloTurns; i++) {
+    for (int j = 0; j < haloPoints; j++) {
+      pushMatrix();
+      rotateZ(i*TWO_PI/haloTurns + j*TWO_PI/haloPoints/haloTurns+PI/6);
+      translate(Rd *3, 0, 0);
+      rotateY(j*TWO_PI/haloPoints+frameCount*PI/60f);
+      translate(Rd*1.6, 0, 0);
+      rotateY((frameCount-j)*PI/20f);
+      scale(0.25, 0.25, 0.25);
+      carton[(i*haloPoints+j)%haloPeriod].render();
+      popMatrix();
+    }
+  }
+
+  for (int i = 0; i < haloTurns; i++) {
+    for (int j = 0; j < haloPoints; j++) {
+      pushMatrix();
+      rotateZ(i*TWO_PI/haloTurns + j*TWO_PI/haloPoints/haloTurns+10*PI/6);
+      translate(Rd *3, 0, 0);
+      rotateY(j*TWO_PI/haloPoints+frameCount*PI/60f);
+      translate(Rd*1.6, 0, 0);
+      rotateZ(i*TWO_PI/haloTurns + j*TWO_PI/haloPoints/haloTurns+10*PI/6);
+      rotateY((frameCount+j)*PI/15f);
+      scale(0.25, 0.25, -0.25);
+      carton[(i*haloPoints+j)%haloPeriod].render();
+      popMatrix();
+    }
+  }
+
+  for (int i = 0; i < haloTurns; i++) {
+    for (int j = 0; j < haloPoints; j++) {
+      pushMatrix();  
+      rotateZ(i*TWO_PI/haloTurns + j*TWO_PI/haloPoints/haloTurns+3*PI/6);
+      translate(Rd *3, 0, 0);
+      rotateY(j*TWO_PI/haloPoints+frameCount*PI/60f);
+      translate(Rd*1.6, 0, 0);
+      rotateY((frameCount-2*j)*PI/30f);
+      scale(0.25, 0.25, 0.25);
+      carton[(i*haloPoints+j)%haloPeriod].render();
+      popMatrix();
+    }
+  }
+
+  println(frameCount + " + " + frameRate);
+  saveFrame("render/####_donutfountain.tif");
+  if (frameCount > 720) noLoop();
 }
 
 class Donut {
@@ -174,6 +166,7 @@ class Donut {
   Sprinkles[] load = new Sprinkles[100];
 
   Donut() {
+    //isSprink = false;
     for (int i = 0; i < load.length; i++) {
       load[i] = new Sprinkles(color( sprinkleColors[ int(random(sprinkleColors.length)) ] ));
     }
@@ -205,7 +198,7 @@ class Donut {
 
 class Sprinkles {
 
-  PVector pos = new PVector(random(Rd-rd/2, Rd+rd/2), random(2*PI), random(2*PI));
+  PVector pos = new PVector(random(Rd-rd, Rd+rd), random(2*PI), random(2*PI));
   color col;
 
   Sprinkles(color col) {
