@@ -121,8 +121,9 @@ void draw() {
   popMatrix();
   println(frameRate + " : " + frameCount);
 
-  saveFrame("render/####_donuts.tif");
-  if (frameCount > 720) noLoop();
+  if (frameCount >= 70 && frameCount <= 790)
+    saveFrame("render/####_donutchain.tif");
+  if ( frameCount > 790)noLoop();
 }
 
 void donutRing() {
@@ -130,7 +131,7 @@ void donutRing() {
     pushMatrix();
     rotateZ(i*PI/(carton.length/2));
     translate(250, 0, 0);
-    rotateY((i%2)*PI/2);
+    rotateY((i%2)*PI/2 + i*PI/carton.length + frameCount*PI/60f);
     rotateZ(frameCount*PI/180f);
     carton[i].render();
     popMatrix();
