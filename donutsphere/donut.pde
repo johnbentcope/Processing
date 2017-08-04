@@ -1,7 +1,7 @@
 class Donut {
-  
+
   // Declaring these as global variables ends up killing alpha values
-  
+
   color[] donutColors = {
     color(#FFD18A, 255), // vanilla donut
     color(#FF9188, 255), 
@@ -40,6 +40,7 @@ class Donut {
   Sprinkles[] load = new Sprinkles[100];
 
   Donut() {
+  isSprink = false;
     if ( isSprink)
       for (int i = 0; i < load.length; i++) {
         load[i] = new Sprinkles(color( sprinkleColors[ int(random(sprinkleColors.length)) ] ));
