@@ -59,8 +59,9 @@ void draw() {
   //  0, 0, -1.0);
   rotateZ(frameCount*TWO_PI/360f);
   //renderPlatanos();
-  println(frameRate);
+  println(frameRate, frameCount);
   if (frameCount >=720 && frameCount < 720*2) saveFrame("render/####_platanos.tif");
+  if (frameCount > 720*2) noLoop();
 }
 
 void renderPlatanos() {

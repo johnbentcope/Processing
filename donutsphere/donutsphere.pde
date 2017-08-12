@@ -106,7 +106,9 @@ void renderGlobe()
   {
     float lat = pts[i].lat;
     float lon = pts[i].lon;
-
+    
+    R = 100*(1+5*cos(lon));
+    
     pushMatrix();
     rotateY( lon);
     rotateZ( -lat);

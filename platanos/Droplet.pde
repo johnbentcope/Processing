@@ -26,7 +26,7 @@ class Droplet {
     pushMatrix();
     translate(pos.x, pos.y, pos.z);
     translate(20*sin(frameCount*TWO_PI/42.75), -20*abs(cos(frameCount*TWO_PI/42.75)), 0);
-    rotateY(frameCount*TWO_PI/170);
+    rotateY(frameCount*TWO_PI/180);
     rotateX(PI/6);
     makePlantain();
     popMatrix();
