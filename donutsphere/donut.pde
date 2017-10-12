@@ -50,9 +50,9 @@ class Donut {
   void render() {
 
     // Render the donutchunk eight times
-    for (int i = 0; i < 8; i ++) {
+    //for (int i = 0; i < 8; i ++) {
       pushMatrix();
-      rotateZ(i*PI/4);
+      //rotateZ(i*PI/4);
       donutChunk.setFill(donutColors[flav]);
       shape(donutChunk);
       /* 
@@ -63,7 +63,7 @@ class Donut {
        shape(glazeChunk); 
        } // */
       popMatrix();
-    }
+    //}
 
     // Render the glaze chunks eight times here
     if (isGlazed)

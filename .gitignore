@@ -38,6 +38,7 @@ application.macosx
 !flit/assets/*
 !frufru/
 !grotto/
+!hndl/
 !ice_cream/
 !lorenzecookies/
 !nebulae/

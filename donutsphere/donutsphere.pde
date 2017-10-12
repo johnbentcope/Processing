@@ -1,5 +1,6 @@
 int Rd = 15;
 int rd = 7;
+int donutDetail = 8;
 
 float R = 800;
 
@@ -31,13 +32,19 @@ void setup() {
   initSphere();
 
   donutChunk = createShape();
-  donutChunk.beginShape(QUAD_STRIP);
+  donutChunk.beginShape(QUADS);
   donutChunk.noStroke();
-  for (int j= 0; j < 9; j++) {
-    float beta = PI/8+j*PI/4;
-    float alpha = PI/4;
-    donutChunk.vertex((Rd-rd*cos(beta))*sin(alpha), (Rd-rd*cos(beta))*cos(alpha), rd*sin(beta));
-    donutChunk.vertex((Rd-rd*cos(beta))*sin(alpha+PI/4), (Rd-rd*cos(beta))*cos(alpha+PI/4), rd*sin(beta));
+  for (int i= 0; i < donutDetail+1; i++) {
+    for (int j= 0; j < donutDetail+1; j++) {
+      float beta = PI/donutDetail+j*TWO_PI/donutDetail;
+      float alpha = i*TWO_PI/donutDetail;
+      float beta2 = PI/donutDetail+(j+1)*TWO_PI/donutDetail;
+      float alpha2 = (i+1)*TWO_PI/donutDetail;
+      donutChunk.vertex((Rd-rd*cos(beta))*sin(alpha), (Rd-rd*cos(beta))*cos(alpha), rd*sin(beta));
+      donutChunk.vertex((Rd-rd*cos(beta2))*sin(alpha), (Rd-rd*cos(beta2))*cos(alpha), rd*sin(beta2));
+      donutChunk.vertex((Rd-rd*cos(beta2))*sin(alpha2), (Rd-rd*cos(beta2))*cos(alpha2), rd*sin(beta2));
+      donutChunk.vertex((Rd-rd*cos(beta))*sin(alpha2), (Rd-rd*cos(beta))*cos(alpha2), rd*sin(beta));
+    }
   }
   donutChunk.endShape();
 
@@ -45,11 +52,13 @@ void setup() {
   glazeChunk.beginShape(QUAD_STRIP);
   glazeChunk.noStroke();
   glazeChunk.fill(#EF82FF);
-  for (int j= 0; j < 4; j++) {
-    float beta = PI/8+j*PI/4;
-    float alpha = PI/4;
-    glazeChunk.vertex((Rd-rd*cos(beta))*sin(alpha), (Rd-rd*cos(beta))*cos(alpha), rd*sin(beta)+1);
-    glazeChunk.vertex((Rd-rd*cos(beta))*sin(alpha+PI/4), (Rd-rd*cos(beta))*cos(alpha+PI/4), rd*sin(beta)+1);
+  for (int i= 0; i < donutDetail+1; i++) {
+    for (int j= 0; j < donutDetail/2; j++) {
+      float beta = PI/8+j*PI/4;
+      float alpha = PI/4;
+      glazeChunk.vertex((Rd-rd*cos(beta))*sin(alpha), (Rd-rd*cos(beta))*cos(alpha), rd*sin(beta)+1);
+      glazeChunk.vertex((Rd-rd*cos(beta))*sin(alpha+PI/4), (Rd-rd*cos(beta))*cos(alpha+PI/4), rd*sin(beta)+1);
+    }
   }
   glazeChunk.endShape();
 }
@@ -106,9 +115,7 @@ void renderGlobe()
   {
     float lat = pts[i].lat;
     float lon = pts[i].lon;
-    
-    R = 100*(1+5*cos(lon));
-    
+
     pushMatrix();
     rotateY( lon);
     rotateZ( -lat);
